@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<bean id="prop" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+    <property name="locations"> <!-- PropertyPlaceholderConfigurer类中有个locations属性，接收的是一个数组，即我们可以在下面配好多个properties文件 -->  
+        <array>  
+            <value>classpath:public.properties</value> 
+            <value>classpath:jdbc.properties</value> 
+        </array>  
+    </property>  
+</bean>  
+         <context:property-placeholder location="classpath:jdbc.properties"/>
+   	
+   		
+       
+        <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+          <property name="driverClass" value="${jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${jdbc.driverUrl}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+        </bean>
+ 		
+        <!-- sessionfactory -->
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+        <property name="mappingLocations" >
+            <list>
+            <value>classpath:com/domain/employee.hbm.xml</value> 
+            <value>classpath:com/domain/account.hbm.xml</value>
+            <value>classpath:com/domain/product.hbm.xml</value>
+            <value>classpath:com/domain/users.hbm.xml</value> 
+            <value>classpath:com/domain/status.hbm.xml</value>
+              <value>classpath:com/domain/sorder.hbm.xml</value> 
+            <value>classpath:com/domain/forder.hbm.xml</value>
+          
+            
+            
+            </list>
+        </property>
+        
+        </bean>
+        <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory"></property>
+        </bean>
+        <tx:advice id="advice" transaction-manager="transactionManager">
+            <tx:attributes>
+                <tx:method name="save*" propagation="REQUIRED"/>
+                <tx:method name="update*" propagation="REQUIRED"/>
+                <tx:method name="delete*" propagation="REQUIRED"/>
+                <tx:method name="*" propagation="SUPPORTS"/>
+            </tx:attributes>
+        </tx:advice>
+        <tx:annotation-driven transaction-manager="transactionManager"/>
+        <aop:config>
+            <aop:pointcut expression="execution(* com.liu.*.*(..))" id="pointcut"/>
+            <aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
+        </aop:config>
+     <!-- service层 -->
+        <bean id="baseService" class="com.liu.BaseServiceimpl" lazy-init="true">
+            <property name="sessionFactory" ref="sessionFactory"></property>
+        </bean>
+        <bean id="categoryService" class="com.liu.CategoryServiceimpl" parent="baseService">
+        </bean>
+        <bean id="accountService" class="com.liu.AccountServiceimpl" parent="baseService">
+            <property name="sessionFactory" ref="sessionFactory"></property>
+        </bean>
+        <bean id="productService" class="com.liu.ProductServiceimpl" parent="baseService">
+        </bean>
+        <bean id="usersService" class="com.liu.UsersServiceimpl" parent="baseService">
+        </bean>
+        <bean id="forderService" class="com.liu.ForderServiceimpl" parent="baseService"></bean>
+        <bean id="payService" class="com.liu.PayServiceimpl" ></bean>
+        <bean id="emailUtil" class="com.liu.EmailUtilimpl"></bean>
+        <bean id="messageUtil" class="com.liu.MessageUtilimpl"></bean>
+        <bean id="sorderService" class="com.liu.SorderServiceimpl" parent="baseService"></bean>
+           <bean id="fileUpload" class="com.liu.FileUploadUtil"></bean>
+        	<bean id="productTimerTask" class="com.utils.ProductTimerTask">
+        	    <property name="productService" ref="productService"></property>
+        	    <property name="categoryService" ref="categoryService"></property>
+        </bean>
+<!--         <bean id="payService" class="com.liu.PayServiceimpl" parent="baseService"></bean> -->
+        	<!-- Action层 -->
+        <bean id="baseAction" class="com.action.BaseAction" scope="prototype">
+            <property name="categoryService" ref="categoryService"></property>
+            <property name="accountService" ref="accountService"></property>
+            <property name="productService" ref="productService"></property>
+            <property name="fileUpload" ref="fileUpload"></property>
+            <property name="forderService" ref="forderService"></property>
+            <property name="sorderService" ref="sorderService"></property>
+            <property name="usersService" ref="usersService"></property>
+            <property name="payService" ref="payService"></property>
+            <property name="emailUtil" ref="emailUtil"></property>
+            <property name="messageUtil" ref="messageUtil"></property>
+            
+<!--             <property name="payService" ref="payService"></property> -->
+        </bean>
+        <bean id="categoryAction" class="com.action.CategoryAction" scope="prototype" parent="baseAction">
+        </bean>
+  		<bean id="sendAction" class="com.action.SendAction"></bean>
+  		<bean id="accountAction" class="com.action.AccountAction" parent="baseAction"></bean>
+  		<bean id="productAction" class="com.action.ProductAction" parent="baseAction"></bean>
+     	<bean id="sorderAction" class="com.action.SorderAction" parent="baseAction"></bean>
+     	<bean id="usersAction" class="com.action.UserAction" parent="baseAction"></bean>
+     	<bean id="forderAction" class="com.action.ForderAction" parent="baseAction"></bean>
+     	<bean id="payAction" class="com.action.PayAction" parent="baseAction"></bean>
+<!--      	<bean id="payAction" class="com.action。PayAction" parent="baseAction"></bean> -->
+        </beans>

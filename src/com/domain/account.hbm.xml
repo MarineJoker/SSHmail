@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          <hibernate-mapping>
+              <class name="com.domain.account" table="account1" lazy="false">
+                  <id name="id" column="id">
+                      <generator class="identity"></generator>
+                  </id>
+                  <property name="login" type="java.lang.String">
+                      <column name="login"></column>
+                  </property>
+                  <property name="name" type="java.lang.String">
+                  <column name="name"></column>
+                  </property> 
+                   <property name="pass" type="java.lang.String">
+                  <column name="pass"></column>
+                  </property> 
+                  <set name="set">
+                      <key column="cid"></key>
+                      <one-to-many class="com.domain.employee" />
+                  </set>
+              </class>
+          </hibernate-mapping>

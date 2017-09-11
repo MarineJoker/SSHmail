@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          <hibernate-mapping>
+              <class name="com.domain.employee" table="category" lazy="false">
+                  <id name="eid" column="eid">
+                      <generator class="identity"></generator>
+                  </id>
+                  <property name="type" type="java.lang.String">
+                      <column name="type"></column>
+                  </property>
+                  <property name="hot" type="boolean">
+                  <column name="hot"></column>
+                  </property> 
+                   
+                  <many-to-one name="account1" class="com.domain.account"  column="cid" ></many-to-one>
+              
+              </class>
+          </hibernate-mapping>

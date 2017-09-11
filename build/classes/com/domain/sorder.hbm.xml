@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          <hibernate-mapping>
+              <class name="com.domain.sorder" table="sorder" lazy="false">
+                  <id name="id" column="id">
+                      <generator class="identity"></generator>
+                  </id>
+                  <property name="name" type="java.lang.String">
+                      <column name="name"></column>
+                  </property>
+                  <property name="price" type="double">
+                  <column name="price"></column>
+                  </property> 
+                   <property name="number" type="int">
+                  <column name="number"></column>
+                  </property> 
+                  <many-to-one name="product1" class="com.domain.product" column="pid"></many-to-one>
+                  <many-to-one name="forder1" class="com.domain.forder" column="fid"></many-to-one>
+              </class>
+          </hibernate-mapping>

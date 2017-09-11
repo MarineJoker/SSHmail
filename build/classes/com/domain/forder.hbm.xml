@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          <hibernate-mapping>
+              <class name="com.domain.forder" table="forder" lazy="false">
+                  <id name="id" column="id">
+                      <generator class="identity"></generator>
+                  </id>
+                  <property name="name" type="java.lang.String">
+                      <column name="name"></column>
+                  </property>
+                  <property name="phone" type="java.lang.String">
+                  <column name="phone"></column>
+                  </property> 
+                   <property name="remark" type="java.lang.String">
+                  <column name="remark"></column>
+                  </property> 
+                   <property name="timestamp" type="java.util.Date">
+                  <column name="timestamp"></column>
+                  </property> 
+                   <property name="total" type="double">
+                  <column name="total"></column>
+                  </property> 
+                   <property name="post" type="java.lang.String">
+                  <column name="post"></column>
+                  </property> 
+                   <property name="address" type="java.lang.String">
+                  <column name="address"></column>
+                  </property> 
+                  <list name="sorders" cascade="all">  
+            <key column="fid"></key>  
+            <index column="index_"></index><!-- 注意index是数据库中的关键字要避免与其冲突，此处index_对应元素在List中的索引 -->  
+            <one-to-many class="com.domain.sorder"/>  
+        </list>  
+                 <many-to-one name="sid" class="com.domain.status" column="sid"></many-to-one>
+                 <many-to-one name="uid" class="com.domain.users" column="uid"></many-to-one>
+              </class>
+          </hibernate-mapping>

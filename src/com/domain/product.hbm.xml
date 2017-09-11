@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+          <hibernate-mapping>
+              <class name="com.domain.product" table="product" lazy="false">
+                  <id name="id" column="id">
+                      <generator class="identity"></generator>
+                  </id>
+                  <property name="name" type="java.lang.String">
+                      <column name="name"></column>
+                  </property>
+                  <property name="price" type="double">
+                  <column name="price"></column>
+                  </property> 
+                  <property name="pic" type="java.lang.String">
+                  <column name="pic"></column>
+                  </property>
+                  <property name="remark" type="java.lang.String">
+                  <column name="remark"></column>
+                  </property>
+                  <property name="xremark" type="java.lang.String">
+                  <column name="xremark"></column>
+                  </property>
+                  <property name="date" type="java.util.Date">
+                  <column name="date"></column>
+                  </property>
+                   <property name="commend" type="boolean">
+                  <column name="commend"></column>
+                  </property>
+                   <property name="open1" type="boolean">
+                  <column name="open1"></column>
+                  </property>
+                   
+                  <many-to-one name="employee1" class="com.domain.employee"  column="eid" ></many-to-one>
+              
+              </class>
+          </hibernate-mapping>
